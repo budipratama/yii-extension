@@ -3,6 +3,7 @@
 namespace backend\controllers;
 
 use common\models\LoginForm;
+use frontend\models\SignupForm;
 use Yii;
 use yii\filters\VerbFilter;
 use yii\filters\AccessControl;
@@ -24,7 +25,7 @@ class SiteController extends Controller
                 'class' => AccessControl::className(),
                 'rules' => [
                     [
-                        'actions' => ['login', 'error'],
+                        'actions' => ['login','create-user', 'error'],
                         'allow' => true,
                     ],
                     [
@@ -100,5 +101,22 @@ class SiteController extends Controller
         Yii::$app->user->logout();
 
         return $this->goHome();
+    }
+
+    public function actionCreateUser(){
+        echo \userip\AutoloadExample::widget();die();
+        $model = new SignupForm();
+        $data['SignupForm']['username']="bud";
+        $data['SignupForm']['email']="a@gmail.com";
+        $data['SignupForm']['password']="rahasiakmkm";
+        if ($model->load($data) && $model->signup()) {
+            Yii::$app->session->setFlash('success', 'Thank you for registration. Please check your inbox for verification email.');
+            return $this->goHome();
+        }
+        else{
+            echo "<pre>";
+            print_r($model->getErrors());
+            echo "</pre>";
+        }
     }
 }
